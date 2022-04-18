@@ -1,6 +1,6 @@
 {
-  "num_of_gru_layers": 5,
-  "gru_hidden_size": 128,
+  "num_of_gru_layers": 2,
+  "gru_hidden_size": 256,
   "gcn_nums_filters": [
     64,
     64

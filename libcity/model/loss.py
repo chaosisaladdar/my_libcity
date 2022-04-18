@@ -1,6 +1,6 @@
-import torch
 import numpy as np
-from sklearn.metrics import r2_score, explained_variance_score
+import torch
+from sklearn.metrics import r2_score, explained_variance_score, roc_auc_score
 
 
 def masked_mae_loss(y_pred, y_true):
@@ -104,7 +104,7 @@ def explained_variance_score_torch(preds, labels):
 
 def masked_rmse_np(preds, labels, null_val=np.nan):
     return np.sqrt(masked_mse_np(preds=preds, labels=labels,
-                   null_val=null_val))
+                                 null_val=null_val))
 
 
 def masked_mse_np(preds, labels, null_val=np.nan):
@@ -157,3 +157,32 @@ def explained_variance_score_np(preds, labels):
     preds = preds.flatten()
     labels = labels.flatten()
     return explained_variance_score(labels, preds)
+
+
+# torch版本
+# 就是cpu的区别?
+def auc_score_torch(preds, labels):
+    # print(preds, labels)
+    # print("#####################################################")
+    preds = preds.cpu().flatten()
+    labels = labels.cpu().flatten()
+    p = preds.numpy()
+    p = np.clip(p, 0, 1)
+    l = labels.numpy()
+    l = np.clip(l, 0, 1)
+    # print(preds, labels)
+    # print(len(preds))
+    # print(len(labels))
+    # print("#####################################################")
+    return roc_auc_score(l, p)
+
+
+# 增加AUC np版本
+def auc_score_np(preds, labels):
+    preds = preds.flatten()
+    labels = labels.flatten()
+    p = preds.numpy()
+    p = np.clip(p, 0, 1)
+    l = labels.numpy()
+    l = np.clip(l, 0, 1)
+    return roc_auc_score(labels, preds, multi_class='ovo')

@@ -1,6 +1,6 @@
 from libcity.evaluator import TrafficStateEvaluator
-from libcity.model import loss
 from libcity.evaluator import eval_funcs
+from libcity.model import loss
 
 
 class TrafficAccidentEvaluator(TrafficStateEvaluator):
@@ -12,8 +12,9 @@ class TrafficAccidentEvaluator(TrafficStateEvaluator):
     def _check_config(self):
         if not isinstance(self.metrics, list):
             raise TypeError('Evaluator type is not list')
-        self.allowed_metrics = ["MAE", "MAPE", "MSE", "RMSE", "masked_MAE", "masked_MAPE", "masked_MSE", "masked_RMSE", "R2", "EVAR",
-                                    "Precision", "Recall", "F1-Score", "MAP", "PCC"]
+        self.allowed_metrics = ["MAE", "MAPE", "MSE", "RMSE", "masked_MAE", "masked_MAPE", "masked_MSE", "masked_RMSE",
+                                "R2", "EVAR",
+                                "Precision", "Recall", "F1-Score", "MAP", "PCC", "AUC"]
         for metric in self.metrics:
             if metric not in self.allowed_metrics:
                 raise ValueError('the metric {} is not allowed in TrafficAccidentEvaluator'.format(str(metric)))
@@ -71,6 +72,10 @@ class TrafficAccidentEvaluator(TrafficStateEvaluator):
                     elif metric == 'EVAR':
                         self.intermediate_result[metric + '@' + str(i)].append(
                             loss.explained_variance_score_torch(y_pred[:, :i], y_true[:, :i]).item())
+                    # 修改
+                    elif metric == 'AUC':
+                        self.intermediate_result[metric + '@' + str(i)].append(
+                            loss.auc_score_torch(y_pred[:, :i], y_true[:, :i]).item())
         elif self.mode.lower() == 'single':  # 第i个时间步的loss
             for i in range(1, self.len_timeslots + 1):
                 for metric in self.metrics:
@@ -119,5 +124,9 @@ class TrafficAccidentEvaluator(TrafficStateEvaluator):
                     elif metric == 'PCC':
                         self.intermediate_result[metric + '@' + str(i)].append(
                             eval_funcs.PCC_torch(y_pred[:, i - 1], y_true[:, i - 1], self.topk))
+                    # 修改
+                    elif metric == 'AUC':
+                        self.intermediate_result[metric + '@' + str(i)].append(
+                            loss.auc_score_torch(y_pred[:, i - 1], y_true[:, i - 1]).item())
         else:
             raise ValueError('Error parameter evaluator_mode={}, please set `single` or `average`.'.format(self.mode))

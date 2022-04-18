@@ -1,5 +1,5 @@
-import torch
 import numpy as np
+import torch
 
 
 class Batch(object):
@@ -67,6 +67,7 @@ class Batch(object):
                     'Batch to_ndarray, only support int, float but you give {}'.format(self.feature_name[key]))
 
 
+# 应该用的是这个
 class BatchPAD(Batch):
 
     def __init__(self, feature_name, pad_item=None, pad_max_len=None):
@@ -143,6 +144,7 @@ class BatchPAD(Batch):
         Args:
             device(torch.device): GPU/CPU设备
         """
+        # 数据种类
         for key in self.data:
             if self.feature_name[key] == 'int':
                 self.data[key] = torch.LongTensor(np.array(self.data[key])).to(device)

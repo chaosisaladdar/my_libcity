@@ -6,12 +6,12 @@ import pandas as pd
 from libcity.data.dataset import TrafficStateCPTDataset
 
 
-class GSNetDataset(TrafficStateCPTDataset):
+class STRiskNetDataset(TrafficStateCPTDataset):
     def __init__(self, config):
         # initialize here for calling self._load_rel() properly
         self.weight_col_list = config.get('weight_col', [])
 
-        super(GSNetDataset, self).__init__(config)
+        super(STRiskNetDataset, self).__init__(config)
 
         # for properly loading the dyna file
         self.len_row = config.get('grid_len_row', None)
@@ -49,17 +49,17 @@ class GSNetDataset(TrafficStateCPTDataset):
         # code reuse
         try:
             self.weight_col = self.weight_col_list[0]
-            super(GSNetDataset, self)._load_rel()
+            super(STRiskNetDataset, self)._load_rel()
             self.road_adj = self.adj_mx
-
-            self.weight_col = self.weight_col_list[1]
-            super(GSNetDataset, self)._load_rel()
-            self.risk_adj = self.adj_mx
-
-            if len(self.weight_col_list) > 2:
-                self.weight_col = self.weight_col_list[2]
-                super(GSNetDataset, self)._load_rel()
-                self.poi_adj = self.adj_mx
+            # 这两都没有了
+            # self.weight_col = self.weight_col_list[1]
+            # super(GSNetDataset, self)._load_rel()
+            # self.risk_adj = self.adj_mx
+            #
+            # if len(self.weight_col_list) > 2:
+            #     self.weight_col = self.weight_col_list[2]
+            #     super(GSNetDataset, self)._load_rel()
+            #     self.poi_adj = self.adj_mx
         finally:
             self.weight_col = orig_weight_col
             self.adj_mx = orig_adj_mx
@@ -71,7 +71,7 @@ class GSNetDataset(TrafficStateCPTDataset):
         orig_geo_ids = self.geo_ids
         self.geo_ids = [i * self.len_column + j for i in range(self.len_row) for j in range(self.len_column)]
 
-        result = super(GSNetDataset, self)._load_grid_4d(filename)
+        result = super(STRiskNetDataset, self)._load_grid_4d(filename)
 
         self.geo_ids = orig_geo_ids
         return result
@@ -144,15 +144,14 @@ class GSNetDataset(TrafficStateCPTDataset):
         d = {"scaler": self.scaler, "num_batches": self.num_batches, "feature_dim": self.feature_dim,
              "ext_dim": self.ext_dim, "output_dim": self.output_dim, "len_row": self.len_row,
              "len_column": self.len_column, 'risk_mask': self.risk_mask, 'road_adj': self.road_adj,
-             'risk_adj': self.risk_adj}
+             'grid_node_map': self.grid_node_map, 'num_of_target_time_feature': self.num_of_target_time_feature}
 
-        if hasattr(self, 'poi_adj'):
-            d['poi_adj'] = self.poi_adj
-        else:
-            d['poi_adj'] = None
-        d['grid_node_map'] = self.grid_node_map
-
-        d['num_of_target_time_feature'] = self.num_of_target_time_feature
+        # 这两都没有
+        # d['risk_adj'] = self.risk_adj
+        # if hasattr(self, 'poi_adj'):
+        #     d['poi_adj'] = self.poi_adj
+        # else:
+        #     d['poi_adj'] = None
 
         lp = self.len_period * (self.pad_forward_period + self.pad_back_period + 1)
         lt = self.len_trend * (self.pad_forward_trend + self.pad_back_trend + 1)

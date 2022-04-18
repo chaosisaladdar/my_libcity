@@ -1,7 +1,9 @@
-import pandas as pd
 import json
-from libcity.utils.utils import ensure_dir
 import os
+
+import pandas as pd
+
+from libcity.utils.utils import ensure_dir
 
 
 class VisHelper:
@@ -99,7 +101,7 @@ class VisHelper:
             geojson_obj['features'].append(feature_i)
 
         ensure_dir(self.save_path)
-        save_name = "_".join(self.dyna_path.split('/')[-1].split('.')) + '.json'
+        save_name = "_".join(self.dyna_path.split('/')[-1].split('.')) + 'STrisknet.json'
         print(f"visualization file saved at {save_name}")
         json.dump(geojson_obj, open(self.save_path + '/' + save_name, 'w',
                                     encoding='utf-8'),
@@ -133,7 +135,7 @@ class VisHelper:
             geojson_obj['features'].append(feature_i)
 
         ensure_dir(self.save_path)
-        save_name = "_".join(self.grid_path.split('/')[-1].split('.')) + '.json'
+        save_name = "_".join(self.grid_path.split('/')[-1].split('.')) + 'STrisknet.json'
         print(f"visualization file saved at {save_name}")
         json.dump(geojson_obj, open(self.save_path + '/' + save_name, 'w',
                                     encoding='utf-8'),
@@ -154,7 +156,7 @@ class VisHelper:
             geojson_obj['features'].append(feature_i)
 
         ensure_dir(self.save_path)
-        save_name = "_".join(self.geo_path.split('/')[-1].split('.')) + '.json'
+        save_name = "_".join(self.geo_path.split('/')[-1].split('.')) + 'STrisknet.json'
         print(f"visualization file saved at {save_name}")
         json.dump(geojson_obj, open(self.save_path + '/' + save_name, 'w',
                                     encoding='utf-8'),
@@ -215,7 +217,7 @@ class VisHelper:
                 geojson_obj['features'].append(feature_i)
 
         ensure_dir(self.save_path)
-        save_name = "_".join(self.dyna_path.split('/')[-1].split('.')) + '.json'
+        save_name = "_".join(self.dyna_path.split('/')[-1].split('.')) + 'STrisknet.json'
         print(f"visualization file saved at {save_name}")
         json.dump(geojson_obj, open(self.save_path + '/' + save_name, 'w',
                                     encoding='utf-8'),
