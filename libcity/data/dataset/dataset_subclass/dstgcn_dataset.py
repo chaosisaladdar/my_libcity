@@ -11,6 +11,8 @@ import torch
 
 from libcity.data.dataset import TrafficStateDataset
 from libcity.data.utils import generate_dataloader_pad
+# scaler
+from libcity.utils import MinMax01Scaler
 
 # 以下为复用
 x_pi = 3.14159265358979324 * 3000.0 / 180.0
@@ -162,7 +164,7 @@ class DSTGCNDataset(TrafficStateDataset):
         else:
             raise ValueError('Not found .ext file!')
         self.feature_name = {'g': 'no_tensor', 'spatial_features': 'no_pad_float', 'temporal_features': 'no_pad_float',
-                             'external_features': 'no_pad_float', 'target': 'no_pad_float'}
+                             'external_features': 'no_pad_float', 'y': 'no_pad_float'}
 
     def _load_geo(self):
         #  载入节点
@@ -476,6 +478,7 @@ class DSTGCNDataset(TrafficStateDataset):
             dict: 包含数据集的相关特征的字典
         """
         # raise NotImplementedError('Please implement the function `get_data_feature()`.')
-        self.scaler = "minmax01"
+        self.scaler = MinMax01Scaler(maxx=1, minn=0)
+        self._logger.info('MinMax01Scaler max: ' + str(self.scaler.max) + ', min: ' + str(self.scaler.min))
         d = {"f_1": 22, "f_2": 1, "f_3": 43, "scaler": self.scaler, "output_dim": self.output_dim}
         return d

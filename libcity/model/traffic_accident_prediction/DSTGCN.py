@@ -8,6 +8,7 @@ from dgl import init as g_init
 from dgl.nn.pytorch import GraphConv
 
 from libcity.model.abstract_traffic_state_model import AbstractTrafficStateModel
+from libcity.model.loss import masked_mae_loss
 
 
 class fully_connected_layer(nn.Module):
@@ -267,6 +268,8 @@ class DSTGCN(AbstractTrafficStateModel):
         # 例如: y = batch['y'] / X_ext = batch['X_ext'] / y_ext = batch['y_ext']]
         g = batch['g']
         bg = g[0]
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        bg = bg.to(device)
         spatial_features = batch['spatial_features']
         s_f = spatial_features[0]
         temporal_features = batch['temporal_features']
@@ -291,21 +294,21 @@ class DSTGCN(AbstractTrafficStateModel):
         """
         # 1.取出真值 ground_truth
         # y_true = batch['y']
-        y_true = batch['target']
+        y_true = batch['y']
         y_true = y_true[0]
         # 2.取出预测值
         y_predicted = self.predict(batch)
         # 3.使用self._scaler将进行了归一化的真值和预测值进行反向归一化（必须）
-        y_true = self._scaler.inverse_transform(y_true[..., :self.output_dim])
-        y_predicted = self._scaler.inverse_transform(y_predicted[..., :self.output_dim])
+        # y_true = self._scaler.inverse_transform(y_true[..., :self.output_dim])
+        # y_predicted = self._scaler.inverse_transform(y_predicted[..., :self.output_dim])
         # 4.调用loss函数计算真值和预测值的误差
         # trafficdl/model/loss.py中定义了常见的loss函数
         # 如果模型源码用到了其中的loss，则可以直接调用，以MSE为例:
-
+        loss = masked_mae_loss(y_predicted, y_true)
         # 如果模型源码所用的loss函数在loss.py中没有，则需要自己实现loss函数
         # ...（自定义loss函数）
         # 5.返回loss的结果
-        return y_predicted - y_true
+        return loss
 
     def predict(self, batch):
         """

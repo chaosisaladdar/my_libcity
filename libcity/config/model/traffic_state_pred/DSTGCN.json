@@ -8,11 +8,13 @@
   "external_temporal_features_number": 5,
   "poi_features_number": 22,
   "batch_size": 1,
+  "scaler": "minmax01",
   "learning_rate": 1e-3,
   "loss_function": "bce_loss",
   "optim": "Adam",
   "weight_decay": 1e-3,
   "K_hop": 10,
+  "output_dim": 1,
   "spatial_features_mean": [
     6.40254292e+00,
     4.81553347e+00,
