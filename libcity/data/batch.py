@@ -165,6 +165,7 @@ class BatchPAD(Batch):
                 for i in range(len(self.data[key])):
                     self.data[key][i] = torch.FloatTensor(np.array(self.data[key][i])).to(device)
             elif self.feature_name[key] == 'no_tensor':
+                # 这个地方会坑死人的
                 pass
             else:
                 raise TypeError(
