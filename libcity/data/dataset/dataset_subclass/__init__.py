@@ -1,3 +1,4 @@
+from libcity.data.dataset.dataset_subclass.RiskseqDataset import RiskseqDataset
 from libcity.data.dataset.dataset_subclass.acfm_dataset import ACFMDataset
 from libcity.data.dataset.dataset_subclass.astgcn_dataset import ASTGCNDataset
 from libcity.data.dataset.dataset_subclass.ccrnn_dataset import CCRNNDataset
@@ -47,5 +48,6 @@ __all__ = [
     "GSNetDataset",
     "LINEDataset",
     "STRiskNetDataset",
-    "DSTGCNDataset"
+    "DSTGCNDataset",
+    "RiskseqDataset"
 ]

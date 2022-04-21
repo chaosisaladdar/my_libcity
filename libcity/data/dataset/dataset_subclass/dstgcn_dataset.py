@@ -142,6 +142,8 @@ class DSTGCNDataset(TrafficStateDataset):
         self.batch_size = 1
         self.grid_len_row = self.config.get('grid_len_row', 242)
         self.grid_len_column = self.config.get('grid_len_column', 236)
+        print('******************************')
+        print(self.data_path)
         if os.path.exists(self.data_path + self.geo_file + '.geo'):
             self._load_geo()
         else:

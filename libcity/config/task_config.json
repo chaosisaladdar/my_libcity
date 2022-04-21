@@ -132,7 +132,8 @@
             "GSNet",
             "CSTN",
             "STRiskNet",
-            "DSTGCN"
+            "DSTGCN",
+            "Riskseq"
         ],
         "allowed_dataset": [
             "METR_LA",
@@ -173,7 +174,8 @@
             "BIKECHI",
             "NYC_RISK",
             "CHICAGO_RISK",
-            "BEIJING_RISK"
+            "BEIJING_RISK",
+            "NYC2017_RISK"
         ],
         "DCRNN": {
             "dataset_class": "TrafficStatePointDataset",
@@ -422,6 +424,11 @@
         },
         "DSTGCN": {
             "dataset_class": "DSTGCNDataset",
+            "executor": "TrafficStateExecutor",
+            "evaluator": "TrafficStateEvaluator"
+        },
+        "Riskseq": {
+            "dataset_class": "RiskseqDataset",
             "executor": "TrafficStateExecutor",
             "evaluator": "TrafficStateEvaluator"
         }
